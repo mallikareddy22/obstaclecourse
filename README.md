@@ -1,14 +1,14 @@
 # obstaclecourse
-Changing Environment Designs
-Number of objects, colors, environment
-Upgrading from 2D to 3D
-Making point of view the cube
-Camera currently follows cube
-Instead of moving by arrows, moving by controller
-Character controller?
-Colliders/Point System
-Create a Point system in top right
-Start with 100
-If user gets in obstacle trigger space
-Decrease points for length in trigger
+Changing Environment Designs\n
+Number of objects, colors, environment\n
+Upgrading from 2D to 3D\n
+Making point of view the cube\n
+Camera currently follows cube\n
+Instead of moving by arrows, moving by controller\n
+Character controller?\n
+Colliders/Point System\n
+Create a Point system in top right\n
+Start with 100\n
+If user gets in obstacle trigger space\n
+Decrease points for length in trigger\n
 https://www.youtube.com/watch?v=odeBFghJJBc
