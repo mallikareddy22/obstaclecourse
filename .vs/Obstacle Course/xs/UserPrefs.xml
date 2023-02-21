@@ -1,0 +1,27 @@
+﻿<Properties StartupConfiguration="{444A1935-9EEF-5C40-0E63-9F65BC0B1292}|">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/random_location.cs">
+    <Files>
+      <File FileName="Assets/random_location.cs" Line="35" Column="44" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Obstacle Course" expanded="True" selected="True" />
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.UnitTesting.TestPad">
+        <State name="__root__">
+          <Node name="Unity" expanded="True" selected="True" />
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.AimingRig PreferredExecutionTarget="bb33718c-2a7b-4871-b371-a2c8814bbb00" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="0d7c326a-65be-475e-aecc-7dcf146a7a5a" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
