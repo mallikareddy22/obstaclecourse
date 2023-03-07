@@ -29,11 +29,8 @@ public class random_location : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other);
-        Debug.Log(other.gameObject.name);
         if (other.gameObject.name == "Player")
         {
-            Debug.Log("hi");
             Destroy(other.gameObject);
         }
     }
@@ -50,7 +47,7 @@ public class random_location : MonoBehaviour
     }
 
 
-    public float speed = 2;
+    public float speed = 1;
     // Update is called once per frame
     void Update()
     {
