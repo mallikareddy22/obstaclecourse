@@ -13,6 +13,7 @@ public class random_location : MonoBehaviour
     Vector3 pos;
     float timePrev;
     float numTimesBeforeScoreDecrease;
+    Vector3 movement;
     // Start is called before the first frame update
     void Start()
     {
@@ -39,9 +40,8 @@ public class random_location : MonoBehaviour
 
     void OnTriggerStay(Collider other) {
         //move the object back
-        transform.Translate(-transform.forward * Time.deltaTime);
+        transform.Translate(-movement * Time.deltaTime);
         numTimesBeforeScoreDecrease--;
-        Debug.Log(numTimesBeforeScoreDecrease);
         if (numTimesBeforeScoreDecrease == 0) {
             Score.decreaseScore();
             numTimesBeforeScoreDecrease = 50;
@@ -62,7 +62,7 @@ public class random_location : MonoBehaviour
     }
 
     void MoveObject(float x, float z, float time = 1) {
-        Vector3 movement = new Vector3(x, 0, z);
+        movement = new Vector3(x, 0, z);
         movement = Vector3.ClampMagnitude(movement, 1);
         transform.Translate(movement * speed * time);
     }
