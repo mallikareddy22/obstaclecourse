@@ -13,6 +13,7 @@ public class random_location : MonoBehaviour
     Vector3 pos;
     float timePrev;
     float numTimesBeforeScoreDecrease;
+    public GameObject cylinder;
     Vector3 movement;
     // Start is called before the first frame update
     void Start()
@@ -25,6 +26,9 @@ public class random_location : MonoBehaviour
         pos = new Vector3(x, y, z);
         transform.position = pos;
         timePrev = 0;
+        for (int i = 0; i < Random.Range(5, 7); i++) {
+            RandomCylinderGenerator();
+        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -62,6 +66,10 @@ public class random_location : MonoBehaviour
         movement = new Vector3(x, 0, z);
         movement = Vector3.ClampMagnitude(movement, 1);
         transform.Translate(movement * speed * time);
+    }
+
+    void RandomCylinderGenerator() {
+        Instantiate(cylinder, new Vector3(Random.Range(-4.0f, 3.3f), 5.0f, Random.Range(-5.0f, 4.0f)), Quaternion.identity);
     }
 }
 
