@@ -20,13 +20,13 @@ public class random_location : MonoBehaviour
     {
         Score.scoreStart(10);
         numTimesBeforeScoreDecrease = 50;
-        x = Random.Range(-4, 4);
-        y = 0.2F;
+        x = 24.0F;
+        y = 0.25F;
         z = Random.Range(-4, 4);
         pos = new Vector3(x, y, z);
         transform.position = pos;
         timePrev = 0;
-        for (int i = 0; i < Random.Range(5, 7); i++) {
+        for (int i = 0; i < Random.Range(30, 35); i++) {
             RandomCylinderGenerator();
         }
     }
@@ -69,7 +69,7 @@ public class random_location : MonoBehaviour
     }
 
     void RandomCylinderGenerator() {
-        Instantiate(cylinder, new Vector3(Random.Range(-4.0f, 3.3f), 5.0f, Random.Range(-5.0f, 4.0f)), Quaternion.identity);
+        Instantiate(cylinder, new Vector3(Random.Range(-24.0f, 24.0f), 5.0f, Random.Range(-24.0f, 24.0f)), Quaternion.identity);
     }
 }
 
