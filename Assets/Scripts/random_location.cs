@@ -76,8 +76,8 @@ public class random_location : MonoBehaviour
         float x = Random.Range(-24.0F, 24.0F);
         float y = 5.0f;
         float z = Random.Range(-24.0f, 24.0f);
-        if (!(x <= -19.8 && z >= -2.7 && z <= 2.7) &&  !(x > 22.0F && z >= -6.0F && z <= 6.0)) {
-            Instantiate(cylinder, new Vector3(Random.Range(-24.0f, 24.0f), 5.0f, Random.Range(-24.0f, 24.0f)), Quaternion.identity);
+        if (!(x <= -19.8 && z >= -2.7 && z <= 2.7) && !(x > 22.0F && z >= -6.0F && z <= 6.0)) {
+            Instantiate(cylinder, new Vector3(x, y, z), Quaternion.identity);
         }
         
     }
