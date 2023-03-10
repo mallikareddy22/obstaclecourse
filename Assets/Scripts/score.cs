@@ -17,16 +17,17 @@ public static class Score
         initScore = score;
     }
     // Update is called once per frame
-    public static void decreaseScore()
+    public static void decreaseScore(Text GameOverText)
     {
         initScore--;
-        checkGameEnd();
+        checkGameEnd(GameOverText);
     }
 
-    public static void checkGameEnd()
+    public static void checkGameEnd(Text GameOverText)
     {
         if (initScore == 0) {
             Debug.Log("game ended");
+            displayGameOver(GameOverText, "You ran out of lives ...");
             Application.Quit();
             Debug.Break(); //remove in production
         }
@@ -35,5 +36,10 @@ public static class Score
     public static void displayScore(Text LivesRemainingText)
     {
         LivesRemainingText.text = "Score: " + getScore();
+    }
+
+    public static void displayGameOver(Text GameOverText, string message) 
+    {
+        GameOverText.text = message;
     }
 }

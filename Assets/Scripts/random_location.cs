@@ -47,9 +47,8 @@ public class random_location : MonoBehaviour
         transform.Translate(-movement * Time.deltaTime);
         numTimesBeforeScoreDecrease--;
         if (numTimesBeforeScoreDecrease == 0) {
-            Score.decreaseScore();
+            Score.decreaseScore(GameOverText);
             numTimesBeforeScoreDecrease = 50;
-            Debug.Log(Score.getScore());
         }
     }
 
@@ -62,32 +61,29 @@ public class random_location : MonoBehaviour
         timePrev = Time.deltaTime;
         MoveObject(x, z, timePrev);
         if (checkGameEnd(transform.position.x, transform.position.z)) {
-            gameOver("You reached the target! Congrats!");
+            Score.displayGameOver(GameOverText, "You reached the target! Congrats!");
         }
     }
 
-    void MoveObject(float x, float z, float time = 1) {
+    void MoveObject(float x, float z, float time = 1) 
+    {
         movement = new Vector3(x, 0, z);
         movement = Vector3.ClampMagnitude(movement, 1);
         transform.Translate(movement * speed * time);
     }
 
-    void RandomCylinderGenerator() {
+    void RandomCylinderGenerator() 
+    {
         float x = Random.Range(-24.0F, 24.0F);
         float y = 5.0f;
         float z = Random.Range(-24.0f, 24.0f);
         if (!(x <= -19.8 && z >= -2.7 && z <= 2.7) && !(x > 22.0F && z >= -6.0F && z <= 6.0)) {
             Instantiate(cylinder, new Vector3(x, y, z), Quaternion.identity);
         }
-        
     }
 
     bool checkGameEnd(float x, float z) {
         return x <= -19.8 && z >= -2.7 && z <= 2.7;
     }
-
-    void gameOver(string message) {
-        GameOverText.text = message;
-    }
+    
 }
-
