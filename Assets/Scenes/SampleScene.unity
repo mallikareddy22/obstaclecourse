@@ -478,7 +478,7 @@ MonoBehaviour:
   GameOverText: {fileID: 96791944}
   cylinder: {fileID: 7948628581736061001, guid: e2ac3888fca884d8fa12167eb17f22f5,
     type: 3}
-  speed: 3
+  speed: 5
 --- !u!143 &307668658
 CharacterController:
   m_ObjectHideFlags: 0

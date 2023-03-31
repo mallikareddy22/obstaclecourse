@@ -20,22 +20,20 @@ public static class Score
     public static void decreaseScore(Text GameOverText)
     {
         initScore--;
-        checkGameEnd(GameOverText);
+        if (checkGameEnd(GameOverText)) {
+            Debug.Log("game ended");
+            displayGameOver(GameOverText, "You ran out of lives...");
+        }
     }
 
-    public static void checkGameEnd(Text GameOverText)
+    public static bool checkGameEnd(Text GameOverText)
     {
-        if (initScore == 0) {
-            Debug.Log("game ended");
-            displayGameOver(GameOverText, "You ran out of lives ...");
-            Application.Quit();
-            Debug.Break(); //remove in production
-        }
+        return initScore == 0;
     }
 
     public static void displayScore(Text LivesRemainingText)
     {
-        LivesRemainingText.text = "Score: " + getScore();
+        LivesRemainingText.text = "Lives Remain: " + getScore();
     }
 
     public static void displayGameOver(Text GameOverText, string message) 

@@ -6,31 +6,76 @@ using static Score;
 
 public class random_location : MonoBehaviour
 {
+    Rigidbody cube_Rigidbody;
     public Text LivesRemainingText;
     public Text GameOverText;
+    public float speed = 3.5f;
     float x;
     float y;
     float z;
     Vector3 pos;
     float timePrev;
-    float numTimesBeforeScoreDecrease;
+    float numFramesBeforeScoreDecrease;
+    int minNumCylinders;
+    int maxNumCylinders;
     public GameObject cylinder;
+    GameObject[] cylinders;
+    public int numTrials;
+    int curTrialNum;
     Vector3 movement;
-    public float speed = 2;
+    bool gameOver;
+    int numFramesBeforeNextTrial;
+    
     // Start is called before the first frame update
     void Start()
     {
+        Application.targetFrameRate = 50;
+        numFramesBeforeScoreDecrease = Application.targetFrameRate;
+
+        numTrials = 10;
+
+        //number of obstacles
+        minNumCylinders = 30;
+        maxNumCylinders = 40;
+
+        //find the cube in the scene
+        cube_Rigidbody = GetComponent<Rigidbody>();
+        
+        //start the first trial
+        curTrialNum = 1;
+        StartNewTrial();
+    }
+
+    void StartNewTrial() {
+        gameOver = false;
+        numFramesBeforeNextTrial = 200;
         Score.scoreStart(10);
-        speed = 2;
-        numTimesBeforeScoreDecrease = 50;
+
+        Score.displayGameOver(GameOverText, "");
+
+        //Reset cube location
         x = 24.0F;
         y = 0.25F;
         z = Random.Range(-4, 4);
         pos = new Vector3(x, y, z);
         transform.position = pos;
+
+        //Time between previous frame and current frame
         timePrev = 0;
+
+        //Destroy cylinders 
+        if (curTrialNum != 1) {
+            foreach (GameObject curCylinder in cylinders) {
+                if (curCylinder != null) {
+                    Destroy(curCylinder);
+                }  
+            }
+        }
+        
+        //Generate random cylinders across the board
+        cylinders = new GameObject[Random.Range(minNumCylinders, maxNumCylinders)];
         for (int i = 0; i < Random.Range(30, 35); i++) {
-            RandomCylinderGenerator();
+            RandomCylinderGenerator(i);
         }
     }
 
@@ -44,11 +89,11 @@ public class random_location : MonoBehaviour
 
     void OnTriggerStay(Collider other) {
         //move the object back
-        transform.Translate(-movement * Time.deltaTime);
-        numTimesBeforeScoreDecrease--;
-        if (numTimesBeforeScoreDecrease == 0) {
+        transform.Translate(-movement * Time.deltaTime * speed);
+        numFramesBeforeScoreDecrease--;
+        if (numFramesBeforeScoreDecrease == 0) {
             Score.decreaseScore(GameOverText);
-            numTimesBeforeScoreDecrease = 50;
+            numFramesBeforeScoreDecrease = Application.targetFrameRate;
         }
     }
 
@@ -59,9 +104,32 @@ public class random_location : MonoBehaviour
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
         timePrev = Time.deltaTime;
-        MoveObject(x, z, timePrev);
-        if (checkGameEnd(transform.position.x, transform.position.z)) {
-            Score.displayGameOver(GameOverText, "You reached the target! Congrats!");
+        if (!gameOver) {
+            if (checkGameEnd(transform.position.x, transform.position.z)) {
+                Score.displayGameOver(GameOverText, "You reached the target! Congrats!");
+                gameOver = true;
+                return;
+            }
+            else if (Score.getScore() == 0) {
+                gameOver = true;
+                return;
+            }
+            MoveObject(x, z, timePrev);
+        }
+        else {
+            numFramesBeforeNextTrial--;
+            if (numFramesBeforeNextTrial == 0) {
+                if (curTrialNum < numTrials) {
+                    curTrialNum++;
+                    StartNewTrial();
+                }
+                else {
+                    Score.displayGameOver(GameOverText, "Congrats, you finished all trials!");
+                    Debug.Log("Congrats, you finished all trials!");
+                    Application.Quit();
+                    Debug.Break(); //remove in production
+                }
+            }
         }
     }
 
@@ -72,18 +140,18 @@ public class random_location : MonoBehaviour
         transform.Translate(movement * speed * time);
     }
 
-    void RandomCylinderGenerator() 
+    void RandomCylinderGenerator(int idx) 
     {
-        float x = Random.Range(-24.0F, 24.0F);
+        float x = Random.Range(-23.0F, 23.0F);
         float y = 5.0f;
-        float z = Random.Range(-24.0f, 24.0f);
+        float z = Random.Range(-23.0f, 23.0f);
         if (!(x <= -19.8 && z >= -2.7 && z <= 2.7) && !(x > 22.0F && z >= -6.0F && z <= 6.0)) {
-            Instantiate(cylinder, new Vector3(x, y, z), Quaternion.identity);
+            cylinders[idx] = Instantiate(cylinder, new Vector3(x, y, z), Quaternion.identity);
         }
     }
 
     bool checkGameEnd(float x, float z) {
-        return x <= -19.8 && z >= -2.7 && z <= 2.7;
+        return x <= -20 && z >= -0.4 && z <= 4.1;
     }
     
 }
