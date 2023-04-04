@@ -35,8 +35,8 @@ public class random_location : MonoBehaviour
         numTrials = 10;
 
         //number of obstacles
-        minNumCylinders = 30;
-        maxNumCylinders = 40;
+        minNumCylinders = 60;
+        maxNumCylinders = 70;
 
         //find the cube in the scene
         cube_Rigidbody = GetComponent<Rigidbody>();
