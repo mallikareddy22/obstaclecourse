@@ -29,7 +29,7 @@ public class random_location : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Application.targetFrameRate = 50;
+        Application.targetFrameRate = 25;
         numFramesBeforeScoreDecrease = Application.targetFrameRate;
 
         numTrials = 10;
