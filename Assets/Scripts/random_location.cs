@@ -74,7 +74,7 @@ public class random_location : MonoBehaviour
         
         //Generate random cylinders across the board
         cylinders = new GameObject[Random.Range(minNumCylinders, maxNumCylinders)];
-        for (int i = 0; i < Random.Range(30, 35); i++) {
+        for (int i = 0; i < cylinders.Length; i++) {
             RandomCylinderGenerator(i);
         }
     }
@@ -143,9 +143,9 @@ public class random_location : MonoBehaviour
     void RandomCylinderGenerator(int idx) 
     {
         float x = Random.Range(-23.0F, 23.0F);
-        float y = 5.0f;
+        float y = 1.0f;
         float z = Random.Range(-23.0f, 23.0f);
-        if (!(x <= -19.8 && z >= -2.7 && z <= 2.7) && !(x > 22.0F && z >= -6.0F && z <= 6.0)) {
+        if (!(x <= -18.0 && z >= -2.0 && z <= 5.0) && !(x > 22.0F && z >= -6.0F && z <= 6.0)) {
             cylinders[idx] = Instantiate(cylinder, new Vector3(x, y, z), Quaternion.identity);
         }
     }
