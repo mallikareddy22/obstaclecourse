@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657815, g: 0.49641192, b: 0.57481617, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -586,6 +586,10 @@ MonoBehaviour:
   LivesRemainingText: {fileID: 414249024}
   GameOverText: {fileID: 96791944}
   speed: 5
+  x: 0
+  y: 0
+  z: 0
+  startRot: 0
   cylinder: {fileID: 6671108722322147492, guid: 9ca58cbf5836b4f899da6db8a3d65aa8,
     type: 3}
   numTrials: 10
