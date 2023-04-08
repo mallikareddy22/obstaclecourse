@@ -332,6 +332,7 @@ PlayerSettings:
     m_Devices:
     - Oculus
     - OpenVR
+    - MockHMD
   openGLRequireES31: 0
   openGLRequireES31AEP: 0
   openGLRequireES32: 0
