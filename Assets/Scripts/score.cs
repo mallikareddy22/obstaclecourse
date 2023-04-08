@@ -19,7 +19,10 @@ public static class Score
     // Update is called once per frame
     public static void decreaseScore(Text GameOverText)
     {
-        initScore--;
+        if (initScore > 0)
+        {
+            initScore--;
+        }
         if (checkGameEnd(GameOverText)) {
             Debug.Log("game ended");
             displayGameOver(GameOverText, "You ran out of lives...");
