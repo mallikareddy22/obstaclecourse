@@ -11,6 +11,8 @@ public class random_location : MonoBehaviour
     public Text GameOverText;
     public float speed = 3.5f;
 
+    public DebugManager debugManager;
+
     [SerializeField]
     float x;
 
@@ -71,6 +73,12 @@ public class random_location : MonoBehaviour
         z = Random.Range(-2, 4);
         startRot = -85.273f;
 
+        if (!debugManager.isVR || (debugManager.isVR && debugManager.isSim))
+        {
+            pos = new Vector3(x, y, z);
+            transform.position = pos;
+        }
+
         //Time between previous frame and current frame
         timePrev = 0;
 
@@ -128,7 +136,12 @@ public class random_location : MonoBehaviour
                 gameOver = true;
                 return;
             }
-            //MoveObject(x, z, timePrev); // TODO: Add VR check
+
+            if (!debugManager.isVR)
+            {
+                MoveObject(x, z, timePrev);
+            }
+
         }
         else {
             numFramesBeforeNextTrial--;
