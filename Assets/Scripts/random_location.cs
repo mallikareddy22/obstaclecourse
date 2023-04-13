@@ -63,6 +63,7 @@ public class random_location : MonoBehaviour
     void StartNewTrial() {
         gameOver = false;
         numFramesBeforeNextTrial = 200;
+        Time.timeScale = 1;
         Score.scoreStart(10);
 
         Score.displayGameOver(GameOverText, "");
@@ -129,10 +130,12 @@ public class random_location : MonoBehaviour
         if (!gameOver) {
             if (checkGameEnd(transform.position.x, transform.position.z)) {
                 Score.displayGameOver(GameOverText, "You reached the target! Congrats!");
+                Time.timeScale = 0;
                 gameOver = true;
                 return;
             }
             else if (Score.getScore() == 0) {
+                Time.timeScale = 0;
                 gameOver = true;
                 return;
             }
