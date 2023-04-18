@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using static System.TimeSpan;
 using System.Collections;
 using System.Collections.Generic;
 using static Score;
+using System;
 
 public class random_location : MonoBehaviour
 {
@@ -38,6 +40,10 @@ public class random_location : MonoBehaviour
     int numFramesBeforeNextTrial;
 
     public int counter = 1; // remove later, band aid fix
+
+    // time fields
+    private float currTime;
+    public Text currTimeText;
     
     // Start is called before the first frame update
     void Start()
@@ -68,10 +74,13 @@ public class random_location : MonoBehaviour
 
         Score.displayGameOver(GameOverText, "");
 
+        // Reset timer
+        currTime = 0f;
+
         //Reset cube location
         x = 24.0f;
         y = 0.25f;
-        z = Random.Range(-2, 4);
+        z = UnityEngine.Random.Range(-2, 4);
         startRot = -85.273f;
 
         if (!debugManager.isVR || (debugManager.isVR && debugManager.isSim))
@@ -93,7 +102,7 @@ public class random_location : MonoBehaviour
         }
         
         //Generate random cylinders across the board
-        cylinders = new GameObject[Random.Range(minNumCylinders, maxNumCylinders)];
+        cylinders = new GameObject[UnityEngine.Random.Range(minNumCylinders, maxNumCylinders)];
         for (int i = 0; i < cylinders.Length; i++) {
             RandomCylinderGenerator(i);
         }
@@ -122,11 +131,11 @@ public class random_location : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(Application.targetFrameRate);
         displayScore(LivesRemainingText);
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
         timePrev = Time.deltaTime;
+        updateTime();
         if (!gameOver) {
             if (checkGameEnd(transform.position.x, transform.position.z)) {
                 Score.displayGameOver(GameOverText, "You reached the target! Congrats!");
@@ -149,6 +158,8 @@ public class random_location : MonoBehaviour
         else {
             numFramesBeforeNextTrial--;
             if (numFramesBeforeNextTrial == 0) {
+                WriteToJson writeHelper = new WriteToJson("test", "non-patient", "28-11-2022", currTimeText.text, LivesRemainingText.text.Substring(14));
+                writeHelper.SaveToFile(curTrialNum);
                 if (curTrialNum < numTrials) {
                     curTrialNum++;
                     StartNewTrial();
@@ -172,9 +183,9 @@ public class random_location : MonoBehaviour
 
     void RandomCylinderGenerator(int idx) 
     {
-        float x = Random.Range(-23.0F, 23.0F);
+        float x = UnityEngine.Random.Range(-23.0F, 23.0F);
         float y = 1.0f;
-        float z = Random.Range(-23.0f, 23.0f);
+        float z = UnityEngine.Random.Range(-23.0f, 23.0f);
         if (!(x <= -18.0 && z >= -2.0 && z <= 5.0) && !(x > 22.0F && z >= -6.0F && z <= 6.0)) {
             cylinders[idx] = Instantiate(cylinder, new Vector3(x, y, z), Quaternion.identity);
         }
@@ -182,6 +193,13 @@ public class random_location : MonoBehaviour
 
     bool checkGameEnd(float x, float z) {
         return x <= -20 && z >= -0.4 && z <= 4.1;
+    }
+
+    private void updateTime()
+    {
+        currTime += Time.deltaTime;
+        TimeSpan time = TimeSpan.FromSeconds(currTime);
+        currTimeText.text = time.ToString(@"mm\:ss\:ff");
     }
     
 }
