@@ -23,6 +23,8 @@ public class VRController : MonoBehaviour
 
     public random_location RandManager;
 
+    Vector3 movement;
+
     private void Awake()
     {
         m_CharacterController = GetComponent<CharacterController>();
@@ -75,7 +77,7 @@ public class VRController : MonoBehaviour
         // find mvmt orientation
         Vector3 orientationEuler = new Vector3(0, m_Head.eulerAngles.y, 0);
         Quaternion orientation = Quaternion.Euler(orientationEuler);
-        Vector3 movement = Vector3.zero;
+        movement = Vector3.zero;
 
         // not moving
         if (m_MovePress.GetStateUp(SteamVR_Input_Sources.RightHand))
@@ -96,6 +98,13 @@ public class VRController : MonoBehaviour
 
         // apply mvmt
         m_CharacterController.Move(movement);
+    }
+
+    // from cube control
+    void OnTriggerStay(Collider other)
+    {
+        //move the object back
+        transform.Translate(-movement * Time.deltaTime * m_Speed);
     }
 
     private void CalculateRot()
