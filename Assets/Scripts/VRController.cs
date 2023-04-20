@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
+using UnityEngine.XR;
 
 public class VRController : MonoBehaviour
 {
@@ -41,10 +42,13 @@ public class VRController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        HandleHead();
-        CalculateMvmt();
-        CalculateRot();
-        HandleHeight();
+        if (!RandManager.gameOver)
+        {
+            HandleHead();
+            CalculateMvmt();
+            CalculateRot();
+            //HandleHeight();
+        }
 
         if (RandManager.gameOver && RandManager.curTrialNum < RandManager.numTrials && RandManager.counter == 0)
         {
@@ -104,7 +108,8 @@ public class VRController : MonoBehaviour
     void OnTriggerStay(Collider other)
     {
         //move the object back
-        transform.Translate(-movement * Time.deltaTime * m_Speed);
+
+        m_CharacterController.Move(-movement * m_Speed);
     }
 
     private void CalculateRot()
@@ -122,7 +127,7 @@ public class VRController : MonoBehaviour
                 snapValue = Mathf.Abs(m_rotationIncrement);
             }
 
-            transform.RotateAround(m_Head.position, Vector3.up, snapValue * Time.deltaTime);
+            transform.Rotate(0f, snapValue * Time.deltaTime, 0f);
         }
 
     }
@@ -159,8 +164,9 @@ public class VRController : MonoBehaviour
         float rot = -85.273f;
 
         Vector3 pos = new Vector3(x, y, z);
-        transform.position = pos;
-        transform.rotation = Quaternion.Euler(new Vector3(0f, rot, 0f));
+        this.transform.position = pos;
+
+        this.transform.rotation = Quaternion.Euler(new Vector3(0f, rot, 0f));
     }
 
 }

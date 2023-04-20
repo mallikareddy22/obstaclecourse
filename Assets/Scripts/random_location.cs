@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.XR;
 using static System.TimeSpan;
 using System.Collections;
 using System.Collections.Generic;
 using static Score;
 using System;
+using TMPro;
 
 public class random_location : MonoBehaviour
 {
@@ -12,6 +14,8 @@ public class random_location : MonoBehaviour
     public Text LivesRemainingText;
     public Text GameOverText;
     public float speed = 3.5f;
+    public string name = "Julian";
+    public string patient = "True";
 
     public DebugManager debugManager;
 
@@ -44,18 +48,25 @@ public class random_location : MonoBehaviour
     // time fields
     private float currTime;
     public Text currTimeText;
+
+    // vr ui fields
+    public TextMeshPro VRLives;
+    public TextMeshPro VRTimer;
+    public TextMeshPro GameOver;
+
+    //difficulties
+    public int difficulty;
+
     
     // Start is called before the first frame update
     void Start()
     {
         Application.targetFrameRate = 25;
-        numFramesBeforeScoreDecrease = Application.targetFrameRate;
+        numFramesBeforeScoreDecrease = debugManager.isVR ? XRDevice.refreshRate : Application.targetFrameRate;
 
         numTrials = 10;
 
         //number of obstacles
-        minNumCylinders = 60;
-        maxNumCylinders = 70;
 
         //find the cube in the scene
         cube_Rigidbody = GetComponent<Rigidbody>();
@@ -69,10 +80,13 @@ public class random_location : MonoBehaviour
     void StartNewTrial() {
         gameOver = false;
         numFramesBeforeNextTrial = 200;
-        Time.timeScale = 1;
         Score.scoreStart(10);
 
         Score.displayGameOver(GameOverText, "");
+        if (debugManager.isVR)
+        {
+            Score.displayGameOverVR(GameOver, "");
+        }
 
         // Reset timer
         currTime = 0f;
@@ -91,6 +105,24 @@ public class random_location : MonoBehaviour
 
         //Time between previous frame and current frame
         timePrev = 0;
+
+        // set difficulty levels
+
+        switch (difficulty)
+        {
+            case 1:
+                minNumCylinders = 40;
+                maxNumCylinders = 50;
+                break;
+            case 2:
+                minNumCylinders = 60;
+                maxNumCylinders = 70;
+                break;
+            case 3:
+                minNumCylinders = 80;
+                maxNumCylinders = 90;
+                break;
+        }
 
         //Destroy cylinders 
         if (curTrialNum != 1) {
@@ -124,7 +156,13 @@ public class random_location : MonoBehaviour
         numFramesBeforeScoreDecrease--;
         if (numFramesBeforeScoreDecrease <= 0) {
             Score.decreaseScore(GameOverText);
-            numFramesBeforeScoreDecrease = Application.targetFrameRate;
+
+            if (debugManager.isVR)
+            {
+                Score.decreaseScoreVR(GameOver);
+            }
+
+            numFramesBeforeScoreDecrease = debugManager.isVR ? XRDevice.refreshRate : Application.targetFrameRate;
         }
     }
 
@@ -132,6 +170,12 @@ public class random_location : MonoBehaviour
     void Update()
     {
         displayScore(LivesRemainingText);
+
+        if (debugManager.isVR)
+        {
+            displayScoreVR(VRLives);
+        }
+
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
         timePrev = Time.deltaTime;
@@ -139,12 +183,15 @@ public class random_location : MonoBehaviour
         if (!gameOver) {
             if (checkGameEnd(transform.position.x, transform.position.z)) {
                 Score.displayGameOver(GameOverText, "You reached the target! Congrats!");
-                Time.timeScale = 0;
+                if (debugManager.isVR)
+                {
+                    Score.displayGameOverVR(GameOver, "You reached the target! Congrats!");
+                }
+
                 gameOver = true;
                 return;
             }
             else if (Score.getScore() == 0) {
-                Time.timeScale = 0;
                 gameOver = true;
                 return;
             }
@@ -158,7 +205,7 @@ public class random_location : MonoBehaviour
         else {
             numFramesBeforeNextTrial--;
             if (numFramesBeforeNextTrial == 0) {
-                WriteToJson writeHelper = new WriteToJson("test", "non-patient", "28-11-2022", currTimeText.text, LivesRemainingText.text.Substring(14));
+                WriteToJson writeHelper = new WriteToJson(name, patient, difficulty, "28-11-2022", currTimeText.text, LivesRemainingText.text.Substring(14));
                 writeHelper.SaveToFile(curTrialNum);
                 if (curTrialNum < numTrials) {
                     curTrialNum++;
@@ -166,6 +213,11 @@ public class random_location : MonoBehaviour
                 }
                 else {
                     Score.displayGameOver(GameOverText, "Congrats, you finished all trials!");
+                    if (debugManager.isVR)
+                    {
+                        Score.displayGameOverVR(GameOver, "Congrats, you finished all trials!");
+                    }
+
                     Debug.Log("Congrats, you finished all trials!");
                     Application.Quit();
                     Debug.Break(); //remove in production
@@ -200,6 +252,10 @@ public class random_location : MonoBehaviour
         currTime += Time.deltaTime;
         TimeSpan time = TimeSpan.FromSeconds(currTime);
         currTimeText.text = time.ToString(@"mm\:ss\:ff");
+        if (debugManager.isVR)
+        {
+            VRTimer.text = time.ToString(@"mm\:ss\:ff");
+        }
     }
     
 }

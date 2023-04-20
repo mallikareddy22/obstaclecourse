@@ -45,9 +45,12 @@ public class DebugManager : MonoBehaviour
         }
         else
         {
-            XRSettings.LoadDeviceByName("");
-            SimVRPlayer.SetActive(false);
-            SimTool.SetActive(false);
+            if (!isVR)
+            {
+                XRSettings.LoadDeviceByName("");
+                SimVRPlayer.SetActive(false);
+                SimTool.SetActive(false);
+            }
         }
     }
 

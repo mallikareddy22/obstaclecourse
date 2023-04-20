@@ -14,14 +14,16 @@ public class WriteToJson : MonoBehaviour
         public string date;
         public string timeElapsed;
         public string livesRemain;
+        public int diff;
     }
 
     private WriteToJsonHelper writeAttributes = new WriteToJsonHelper();
 
-    public WriteToJson(string name, string desc, string date, string timeElapsed, string livesRemain)
+    public WriteToJson(string name, string desc, int diff, string date, string timeElapsed, string livesRemain)
     {
         writeAttributes.name = name;
         writeAttributes.desc = desc;
+        writeAttributes.diff = diff;
         writeAttributes.date = DateTime.Now.ToString("dd-MM-yyyy"); ;
         writeAttributes.timeElapsed = timeElapsed;
         writeAttributes.livesRemain = livesRemain;
