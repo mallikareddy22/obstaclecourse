@@ -14,8 +14,9 @@ public class random_location : MonoBehaviour
     public Text LivesRemainingText;
     public Text GameOverText;
     public float speed = 3.5f;
-    public string name = "Julian";
-    public string patient = "True";
+    public string subjectName;
+    public bool isPatient;
+    public string eye;
 
     public DebugManager debugManager;
 
@@ -205,7 +206,7 @@ public class random_location : MonoBehaviour
         else {
             numFramesBeforeNextTrial--;
             if (numFramesBeforeNextTrial == 0) {
-                WriteToJson writeHelper = new WriteToJson(name, patient, difficulty, "28-11-2022", currTimeText.text, LivesRemainingText.text.Substring(14));
+                WriteToJson writeHelper = new WriteToJson(subjectName, isPatient, difficulty, "28-11-2022", currTimeText.text, Int32.Parse(LivesRemainingText.text.Substring(14)), eye);
                 writeHelper.SaveToFile(curTrialNum);
                 if (curTrialNum < numTrials) {
                     curTrialNum++;
@@ -249,7 +250,11 @@ public class random_location : MonoBehaviour
 
     private void updateTime()
     {
-        currTime += Time.deltaTime;
+        if (!gameOver)
+        {
+            currTime += Time.deltaTime;
+        }
+
         TimeSpan time = TimeSpan.FromSeconds(currTime);
         currTimeText.text = time.ToString(@"mm\:ss\:ff");
         if (debugManager.isVR)
