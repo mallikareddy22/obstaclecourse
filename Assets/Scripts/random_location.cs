@@ -61,6 +61,7 @@ public class random_location : MonoBehaviour
     // UI elements
     public GameObject startPanel;
     bool showUI;
+    bool prem;
 
     // super scuffed LOL fix later
     [SerializeField]
@@ -81,6 +82,7 @@ public class random_location : MonoBehaviour
         cube_Rigidbody = GetComponent<Rigidbody>();
         startPanel = GameObject.Find("StartPanel");
         showUI = true;
+        prem = false;
         results = new List<Results>();
 
     }
@@ -218,6 +220,12 @@ public class random_location : MonoBehaviour
         }
     }
 
+    public void RunPrem()
+    {
+        prem = true;
+        SetupInfo();
+    }
+
     void RunExpt()
     {
         displayScore(LivesRemainingText);
@@ -270,6 +278,14 @@ public class random_location : MonoBehaviour
                 }
                 else
                 {
+                    if (prem)
+                    {
+                        results.Clear();
+                        showUI = true;
+                        prem = false;
+                        return;
+                    }
+
                     WriteToJson.SaveToFile(results.ToArray(), subjectName);
                     Score.displayGameOver(GameOverText, "Congrats, you finished all trials!");
                     if (debugManager.isVR)
