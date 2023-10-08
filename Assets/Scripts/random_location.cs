@@ -58,6 +58,15 @@ public class random_location : MonoBehaviour
     //difficulties
     public int difficulty;
 
+    // UI elements
+    public GameObject startPanel;
+    bool showUI;
+    bool prem;
+
+    // super scuffed LOL fix later
+    [SerializeField]
+    List<Results> results;
+
     
     // Start is called before the first frame update
     void Start()
@@ -71,11 +80,41 @@ public class random_location : MonoBehaviour
 
         //find the cube in the scene
         cube_Rigidbody = GetComponent<Rigidbody>();
+        startPanel = GameObject.Find("StartPanel");
+        showUI = true;
+        prem = false;
+        results = new List<Results>();
+
+    }
+
+    /**
+     * Assigns pertinent patient information.
+     * Errors if unsuccessful.
+     * TODO: More validation.
+     */
+    public void SetupInfo()
+    {
         
+        subjectName = startPanel.transform.GetChild(0).GetComponent<InputField>().text;
+        if (subjectName.Length == 0)
+        {
+            Debug.LogError("Name is empty!");
+            return;
+        }
+
+        numTrials = int.Parse(startPanel.transform.GetChild(1).GetComponent<InputField>().text);
+        List<Dropdown.OptionData> eyeOptions = startPanel.transform.GetChild(2).GetComponent<Dropdown>().options;
+        eye = eyeOptions[startPanel.transform.GetChild(2).GetComponent<Dropdown>().value].text;
+
+        difficulty = startPanel.transform.GetChild(3).GetComponent<Dropdown>().value + 1;
+        Debug.Log(difficulty);
+
+        isPatient = startPanel.transform.GetChild(4).GetComponent<Toggle>().isOn;
+
         //start the first trial
         curTrialNum = 1;
         StartNewTrial();
-
+        showUI = false;
     }
 
     void StartNewTrial() {
@@ -170,6 +209,25 @@ public class random_location : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (showUI)
+        {
+            startPanel.SetActive(true);
+        } 
+        else
+        {
+            startPanel.SetActive(false);
+            RunExpt();
+        }
+    }
+
+    public void RunPrem()
+    {
+        prem = true;
+        SetupInfo();
+    }
+
+    void RunExpt()
+    {
         displayScore(LivesRemainingText);
 
         if (debugManager.isVR)
@@ -181,8 +239,10 @@ public class random_location : MonoBehaviour
         float z = Input.GetAxis("Vertical");
         timePrev = Time.deltaTime;
         updateTime();
-        if (!gameOver) {
-            if (checkGameEnd(transform.position.x, transform.position.z)) {
+        if (!gameOver)
+        {
+            if (checkGameEnd(transform.position.x, transform.position.z))
+            {
                 Score.displayGameOver(GameOverText, "You reached the target! Congrats!");
                 if (debugManager.isVR)
                 {
@@ -192,7 +252,8 @@ public class random_location : MonoBehaviour
                 gameOver = true;
                 return;
             }
-            else if (Score.getScore() == 0) {
+            else if (Score.getScore() == 0)
+            {
                 gameOver = true;
                 return;
             }
@@ -203,16 +264,29 @@ public class random_location : MonoBehaviour
             }
 
         }
-        else {
+        else
+        {
             numFramesBeforeNextTrial--;
-            if (numFramesBeforeNextTrial == 0) {
-                WriteToJson writeHelper = new WriteToJson(subjectName, isPatient, difficulty, "28-11-2022", currTimeText.text, Int32.Parse(LivesRemainingText.text.Substring(14)), eye);
-                writeHelper.SaveToFile(curTrialNum);
-                if (curTrialNum < numTrials) {
+            if (numFramesBeforeNextTrial == 0)
+            {
+                Results result = new Results(subjectName, isPatient, difficulty, "28-11-2022", currTimeText.text, Int32.Parse(LivesRemainingText.text.Substring(14)), eye);
+                results.Add(result);
+                if (curTrialNum < numTrials)
+                {
                     curTrialNum++;
                     StartNewTrial();
                 }
-                else {
+                else
+                {
+                    if (prem)
+                    {
+                        results.Clear();
+                        showUI = true;
+                        prem = false;
+                        return;
+                    }
+
+                    WriteToJson.SaveToFile(results.ToArray(), subjectName);
                     Score.displayGameOver(GameOverText, "Congrats, you finished all trials!");
                     if (debugManager.isVR)
                     {
