@@ -39,20 +39,20 @@ public class VRController : MonoBehaviour
         resetPos();
     }
 
+
     // Update is called once per frame
     void Update()
     {
         if (!RandManager.gameOver)
         {
-            HandleHead();
+            HandleHeight();
             CalculateMvmt();
             CalculateRot();
-            //HandleHeight();
         }
 
         if (RandManager.gameOver && RandManager.curTrialNum < RandManager.numTrials && RandManager.counter == 0)
         {
-            resetPos();
+            //resetPos();
             RandManager.counter++;
         }
     }
@@ -63,8 +63,10 @@ public class VRController : MonoBehaviour
         Vector3 oldPosition = m_CameraRig.position;
         Quaternion oldRotation = m_CameraRig.rotation;
 
+
         // handle rotation of head
         transform.eulerAngles = new Vector3(0.0f, m_Head.rotation.eulerAngles.y, 0.0f);
+
 
         // restore transform after rotation
         m_CameraRig.position = oldPosition;
@@ -107,9 +109,20 @@ public class VRController : MonoBehaviour
     // from cube control
     void OnTriggerStay(Collider other)
     {
-        //move the object back
-
-        m_CharacterController.Move(-movement * m_Speed);
+        // move the object back
+        // first determine if the object is moving forwards or backwards
+        // then negate its movement
+        Vector3 velocity = m_CharacterController.velocity;
+        Vector3 forwardDir = m_CharacterController.transform.forward;
+        float dot = Vector3.Dot(velocity, forwardDir);
+        if (dot < 0)
+        {
+            m_CharacterController.Move(-movement * m_Speed);
+        }
+        else
+        {
+            m_CharacterController.Move(movement * m_Speed);
+        }
     }
 
     private void CalculateRot()
@@ -127,9 +140,8 @@ public class VRController : MonoBehaviour
                 snapValue = Mathf.Abs(m_rotationIncrement);
             }
 
-            transform.Rotate(0f, snapValue * Time.deltaTime, 0f);
+            transform.RotateAround(m_Head.position, Vector3.up, snapValue * Time.deltaTime);
         }
-
     }
 
     // causes some weird centering issues, need to recalculate, not that necessary
@@ -145,20 +157,19 @@ public class VRController : MonoBehaviour
         newCenter.y += m_CharacterController.skinWidth;
 
         // move capsule in local space
-        newCenter.x = m_CameraRig.localPosition.x;
-        newCenter.z = m_CameraRig.localPosition.z;
+        newCenter.x = m_Head.localPosition.x;
+        newCenter.z = m_Head.localPosition.z;
 
         // rotate
         newCenter = Quaternion.Euler(0, -transform.eulerAngles.y, 0) * newCenter;
 
         // apply
-        m_CharacterController.center = newCenter;
-
+        m_CharacterController.center = m_Head.localPosition;
     }
 
     public void resetPos()
     {
-        float x = 24.0f;
+        float x = 22.0f;
         float y = 0.25f;
         float z = Random.Range(-2, 4);
         float rot = -85.273f;
@@ -168,5 +179,7 @@ public class VRController : MonoBehaviour
 
         this.transform.rotation = Quaternion.Euler(new Vector3(0f, rot, 0f));
     }
-
 }
+
+
+
