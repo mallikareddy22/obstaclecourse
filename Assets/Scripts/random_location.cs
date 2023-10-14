@@ -66,7 +66,7 @@ public class random_location : MonoBehaviour
     // super scuffed LOL fix later
     [SerializeField]
     List<Results> results;
-
+    List<Vector3> positions;
     
     // Start is called before the first frame update
     void Start()
@@ -84,6 +84,7 @@ public class random_location : MonoBehaviour
         showUI = true;
         prem = false;
         results = new List<Results>();
+        positions = new List<Vector3>();
 
     }
 
@@ -238,9 +239,11 @@ public class random_location : MonoBehaviour
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
         timePrev = Time.deltaTime;
-        updateTime();
+        
+        positions.Add(this.transform.position);
         if (!gameOver)
         {
+            updateTime();
             if (checkGameEnd(transform.position.x, transform.position.z))
             {
                 Score.displayGameOver(GameOverText, "You reached the target! Congrats!");
@@ -286,7 +289,16 @@ public class random_location : MonoBehaviour
                         return;
                     }
 
-                    WriteToJson.SaveToFile(results.ToArray(), subjectName);
+                    var pathColour = Color.magenta;
+                    var lineRenderer = this.gameObject.GetComponent<LineRenderer>();
+                    lineRenderer.enabled = true;
+                    lineRenderer.positionCount = positions.Count;
+                    lineRenderer.SetPositions(positions.ToArray());
+                    lineRenderer.startColor = pathColour;
+                    lineRenderer.endColor = pathColour;
+                    lineRenderer.widthMultiplier = 1;
+
+                    WriteToCSV.SaveToFile(results.ToArray(), subjectName);
                     Score.displayGameOver(GameOverText, "Congrats, you finished all trials!");
                     if (debugManager.isVR)
                     {
