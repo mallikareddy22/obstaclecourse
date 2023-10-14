@@ -28,4 +28,9 @@ public class Results
         this.livesRemain = livesRemain;
         this.eye = eye;
     }
+
+    public override string ToString()
+    {
+        return name + "," + desc + "," + diff + "," + date + "," + timeElapsed + "," + livesRemain + "," + eye;
+    }
 }
