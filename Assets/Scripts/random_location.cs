@@ -84,8 +84,6 @@ public class random_location : MonoBehaviour
         showUI = true;
         prem = false;
         results = new List<Results>();
-        positions = new List<Vector3>();
-
     }
 
     /**
@@ -119,6 +117,7 @@ public class random_location : MonoBehaviour
     }
 
     void StartNewTrial() {
+        positions = new List<Vector3>();
         gameOver = false;
         numFramesBeforeNextTrial = 200;
         Score.scoreStart(10);
@@ -274,6 +273,7 @@ public class random_location : MonoBehaviour
             {
                 Results result = new Results(subjectName, isPatient, difficulty, "28-11-2022", currTimeText.text, Int32.Parse(LivesRemainingText.text.Substring(14)), eye);
                 results.Add(result);
+                WriteToCSV.SavePositionData(positions, subjectName, curTrialNum);
                 if (curTrialNum < numTrials)
                 {
                     curTrialNum++;
@@ -298,7 +298,7 @@ public class random_location : MonoBehaviour
                     lineRenderer.endColor = pathColour;
                     lineRenderer.widthMultiplier = 1;
 
-                    WriteToCSV.SaveToFile(results.ToArray(), subjectName);
+                    WriteToCSV.SaveTrialData(results.ToArray(), subjectName);
                     Score.displayGameOver(GameOverText, "Congrats, you finished all trials!");
                     if (debugManager.isVR)
                     {

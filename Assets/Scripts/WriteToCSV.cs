@@ -15,13 +15,14 @@ public class WriteToCSV {
         public T[] Data;
     }
 
-    public static void SaveToFile<T>(T[] array, String name)
+    public static void SaveTrialData<T>(T[] array, string name)
     {
         Wrapper<T> wrapper = new Wrapper<T>();
         wrapper.Data = array;
 
-        String filePath = Application.persistentDataPath + "/trial" + "_" + name + ".csv";
-        String header = "name,desc,diff,date,time_elapsed,lives_remain,eye";
+        string filePath = Application.persistentDataPath + "/" + name + "/trial" + "_" + name + ".csv";
+        string header = "name,is_patient,diff,date,time_elapsed,lives_remain,eye";
+        (new FileInfo(filePath)).Directory.Create();
         StreamWriter streamWriter = File.AppendText(filePath);
         streamWriter.WriteLine(header);
 
@@ -31,7 +32,25 @@ public class WriteToCSV {
         }
 
         streamWriter.Close();
-        Debug.Log("Saved to: " + Application.persistentDataPath + "/trial" + "_" + name + ".csv");
+        Debug.Log("Saved to: " + Application.persistentDataPath + "/" + name + "/trial" + "_" + name + ".csv");
 
+    }
+
+    public static void SavePositionData(List<Vector3> positions, string name, int trialNum)
+    {
+        string filePath = Application.persistentDataPath + "/" + name + "/trial" + "_" + trialNum + "_pos.csv";
+        (new FileInfo(filePath)).Directory.Create();
+        StreamWriter streamWriter = File.AppendText(filePath);
+        string header = "x,y,z";
+        streamWriter.WriteLine(header);
+
+        foreach (Vector3 pos in positions)
+        {
+            string line = pos.x + "," + pos.y + "," + pos.z;
+            streamWriter.WriteLine(line);
+        }
+
+        streamWriter.Close();
+        Debug.Log("Saved position to: " + Application.persistentDataPath + "/" + name + "/trial" + "_" + trialNum + "_pos.csv");
     }
 }
