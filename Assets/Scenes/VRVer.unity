@@ -5713,7 +5713,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Sensitivity: 0.1
-  m_MaxSpeed: 1
+  m_MaxSpeed: 4
   m_rotationIncrement: 90
   m_MovePress:
     actionPath: /actions/default/in/Teleport

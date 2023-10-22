@@ -52,7 +52,7 @@ public class VRController : MonoBehaviour
 
         if (RandManager.gameOver && RandManager.curTrialNum < RandManager.numTrials && RandManager.counter == 0)
         {
-            //resetPos();
+            resetPos();
             RandManager.counter++;
         }
     }
