@@ -117,11 +117,11 @@ public class VRController : MonoBehaviour
         float dot = Vector3.Dot(velocity, forwardDir);
         if (dot < 0)
         {
-            m_CharacterController.Move(-movement * m_Speed);
+            m_CharacterController.Move(movement * m_Speed);
         }
         else
         {
-            m_CharacterController.Move(movement * m_Speed);
+            m_CharacterController.Move(-movement * m_Speed);
         }
     }
 

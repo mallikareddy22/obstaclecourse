@@ -60,7 +60,7 @@ public class random_location : MonoBehaviour
 
     // UI elements
     public GameObject startPanel;
-    bool showUI;
+    public bool showUI;
     bool prem;
 
     // super scuffed LOL fix later
@@ -74,7 +74,7 @@ public class random_location : MonoBehaviour
         Application.targetFrameRate = 25;
         numFramesBeforeScoreDecrease = debugManager.isVR ? XRDevice.refreshRate : Application.targetFrameRate;
 
-        numTrials = 10;
+        numTrials = 2;
 
         //number of obstacles
 
@@ -84,6 +84,7 @@ public class random_location : MonoBehaviour
         showUI = true;
         prem = false;
         results = new List<Results>();
+        positions = new List<Vector3>();
     }
 
     /**
@@ -106,17 +107,18 @@ public class random_location : MonoBehaviour
         eye = eyeOptions[startPanel.transform.GetChild(2).GetComponent<Dropdown>().value].text;
 
         difficulty = startPanel.transform.GetChild(3).GetComponent<Dropdown>().value + 1;
-        Debug.Log(difficulty);
 
         isPatient = startPanel.transform.GetChild(4).GetComponent<Toggle>().isOn;
 
         //start the first trial
         curTrialNum = 1;
-        StartNewTrial();
         showUI = false;
+        startPanel.SetActive(false);
+        StartNewTrial();
     }
 
     void StartNewTrial() {
+        showUI = false;
         positions = new List<Vector3>();
         gameOver = false;
         numFramesBeforeNextTrial = 200;
@@ -209,13 +211,8 @@ public class random_location : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (showUI)
+        if (!startPanel.active)
         {
-            startPanel.SetActive(true);
-        } 
-        else
-        {
-            startPanel.SetActive(false);
             RunExpt();
         }
     }
@@ -268,49 +265,46 @@ public class random_location : MonoBehaviour
         }
         else
         {
-            numFramesBeforeNextTrial--;
-            if (numFramesBeforeNextTrial == 0)
+            Results result = new Results(subjectName, isPatient, difficulty, "28-11-2022", currTimeText.text, Int32.Parse(LivesRemainingText.text.Substring(14)), eye);
+            results.Add(result);
+            WriteToCSV.SavePositionData(positions, subjectName, curTrialNum);
+            if (curTrialNum < numTrials)
             {
-                Results result = new Results(subjectName, isPatient, difficulty, "28-11-2022", currTimeText.text, Int32.Parse(LivesRemainingText.text.Substring(14)), eye);
-                results.Add(result);
-                WriteToCSV.SavePositionData(positions, subjectName, curTrialNum);
-                if (curTrialNum < numTrials)
+                curTrialNum++;
+                StartNewTrial();
+            }
+            else
+            {
+                if (prem)
                 {
-                    curTrialNum++;
-                    StartNewTrial();
+                    results.Clear();
+                    showUI = true;
+                    prem = false;
+                    return;
                 }
-                else
+
+                var pathColour = Color.magenta;
+                var lineRenderer = this.gameObject.GetComponent<LineRenderer>();
+                lineRenderer.enabled = true;
+                lineRenderer.positionCount = positions.Count;
+                lineRenderer.SetPositions(positions.ToArray());
+                lineRenderer.startColor = pathColour;
+                lineRenderer.endColor = pathColour;
+                lineRenderer.widthMultiplier = 1;
+
+                WriteToCSV.SaveTrialData(results.ToArray(), subjectName);
+                Score.displayGameOver(GameOverText, "Congrats, you finished all trials!");
+                if (debugManager.isVR)
                 {
-                    if (prem)
-                    {
-                        results.Clear();
-                        showUI = true;
-                        prem = false;
-                        return;
-                    }
-
-                    var pathColour = Color.magenta;
-                    var lineRenderer = this.gameObject.GetComponent<LineRenderer>();
-                    lineRenderer.enabled = true;
-                    lineRenderer.positionCount = positions.Count;
-                    lineRenderer.SetPositions(positions.ToArray());
-                    lineRenderer.startColor = pathColour;
-                    lineRenderer.endColor = pathColour;
-                    lineRenderer.widthMultiplier = 1;
-
-                    WriteToCSV.SaveTrialData(results.ToArray(), subjectName);
-                    Score.displayGameOver(GameOverText, "Congrats, you finished all trials!");
-                    if (debugManager.isVR)
-                    {
-                        Score.displayGameOverVR(GameOver, "Congrats, you finished all trials!");
-                    }
-
-                    Debug.Log("Congrats, you finished all trials!");
-                    Application.Quit();
-                    Debug.Break(); //remove in production
+                    Score.displayGameOverVR(GameOver, "Congrats, you finished all trials!");
                 }
+
+                Debug.Log("Congrats, you finished all trials!");
+                Application.Quit();
+                Debug.Break(); //remove in production
             }
         }
+        
     }
 
     void MoveObject(float x, float z, float time = 1) 
