@@ -194,7 +194,11 @@ public class random_location : MonoBehaviour
 
     void OnTriggerStay(Collider other) {
         //move the object back
-        transform.Translate(-movement * Time.deltaTime * speed);
+        if (!debugManager.isVR)
+        {
+            transform.Translate(-movement * Time.deltaTime * speed);
+        }
+
         numFramesBeforeScoreDecrease--;
         if (numFramesBeforeScoreDecrease <= 0) {
             Score.decreaseScore(GameOverText);
