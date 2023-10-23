@@ -1133,6 +1133,7 @@ MonoBehaviour:
   startPanel: {fileID: 1043258327}
   showUI: 0
   results: []
+  showPath: 1
 --- !u!143 &307668658
 CharacterController:
   m_ObjectHideFlags: 0
@@ -3508,6 +3509,7 @@ MonoBehaviour:
   startPanel: {fileID: 0}
   showUI: 0
   results: []
+  showPath: 0
 --- !u!114 &844916191
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5700,6 +5702,7 @@ MonoBehaviour:
   startPanel: {fileID: 1043258327}
   showUI: 0
   results: []
+  showPath: 0
 --- !u!114 &1292289621
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -53,4 +53,22 @@ public class WriteToCSV {
         streamWriter.Close();
         Debug.Log("Saved position to: " + Application.persistentDataPath + "/" + name + "/trial" + "_" + trialNum + "_pos.csv");
     }
+
+    public static void SaveHeadData(List<HeadTracking> headInfo, string name, int trialNum)
+    {
+        string filePath = Application.persistentDataPath + "/" + name + "/trial" + "_" + trialNum + "_head.csv";
+        (new FileInfo(filePath)).Directory.Create();
+        StreamWriter streamWriter = File.AppendText(filePath);
+        string header = "pos_x,pos_y,pos_z,rot_x,rot_y,rot_z";
+        streamWriter.WriteLine(header);
+
+        foreach (HeadTracking headNode in headInfo)
+        {
+            string line = headNode.getHeadPosition() + "," + headNode.getHeadRotation();
+            streamWriter.WriteLine(line);
+        }
+
+        streamWriter.Close();
+        Debug.Log("Saved position to: " + Application.persistentDataPath + "/" + name + "/trial" + "_" + trialNum + "_head.csv");
+    }
 }

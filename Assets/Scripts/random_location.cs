@@ -67,7 +67,10 @@ public class random_location : MonoBehaviour
     [SerializeField]
     List<Results> results;
     List<Vector3> positions;
-    
+    List<HeadTracking> headInfo;
+    public bool showPath;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -85,6 +88,10 @@ public class random_location : MonoBehaviour
         prem = false;
         results = new List<Results>();
         positions = new List<Vector3>();
+        headInfo = new List<HeadTracking>();
+
+        var lineRenderer = this.gameObject.GetComponent<LineRenderer>();
+        lineRenderer.enabled = false;
     }
 
     /**
@@ -120,6 +127,7 @@ public class random_location : MonoBehaviour
     void StartNewTrial() {
         showUI = false;
         positions = new List<Vector3>();
+        headInfo = new List<HeadTracking>();
         gameOver = false;
         numFramesBeforeNextTrial = 200;
         Score.scoreStart(10);
@@ -234,6 +242,13 @@ public class random_location : MonoBehaviour
         if (debugManager.isVR)
         {
             displayScoreVR(VRLives);
+            InputDevice device = InputDevices.GetDeviceAtXRNode(XRNode.Head);
+            Vector3 headPosition;
+            Quaternion headRotation;
+            device.TryGetFeatureValue(CommonUsages.devicePosition, out headPosition);
+            device.TryGetFeatureValue(CommonUsages.deviceRotation, out headRotation);
+            headInfo.Add(new HeadTracking(headPosition, headRotation));
+
         }
 
         float x = Input.GetAxis("Horizontal");
@@ -270,8 +285,10 @@ public class random_location : MonoBehaviour
         else
         {
             Results result = new Results(subjectName, isPatient, difficulty, "28-11-2022", currTimeText.text, Int32.Parse(LivesRemainingText.text.Substring(14)), eye);
+
             results.Add(result);
             WriteToCSV.SavePositionData(positions, subjectName, curTrialNum);
+            WriteToCSV.SaveHeadData(headInfo, subjectName, curTrialNum);
             if (curTrialNum < numTrials)
             {
                 curTrialNum++;
@@ -287,14 +304,17 @@ public class random_location : MonoBehaviour
                     return;
                 }
 
-                var pathColour = Color.magenta;
-                var lineRenderer = this.gameObject.GetComponent<LineRenderer>();
-                lineRenderer.enabled = true;
-                lineRenderer.positionCount = positions.Count;
-                lineRenderer.SetPositions(positions.ToArray());
-                lineRenderer.startColor = pathColour;
-                lineRenderer.endColor = pathColour;
-                lineRenderer.widthMultiplier = 1;
+                if (showPath)
+                {
+                    var pathColour = Color.magenta;
+                    var lineRenderer = this.gameObject.GetComponent<LineRenderer>();
+                    lineRenderer.enabled = true;
+                    lineRenderer.positionCount = positions.Count;
+                    lineRenderer.SetPositions(positions.ToArray());
+                    lineRenderer.startColor = pathColour;
+                    lineRenderer.endColor = pathColour;
+                    lineRenderer.widthMultiplier = 1;
+                }
 
                 WriteToCSV.SaveTrialData(results.ToArray(), subjectName);
                 Score.displayGameOver(GameOverText, "Congrats, you finished all trials!");
