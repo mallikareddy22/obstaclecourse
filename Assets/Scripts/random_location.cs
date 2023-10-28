@@ -1,12 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR;
-using static System.TimeSpan;
-using System.Collections;
 using System.Collections.Generic;
 using static Score;
 using System;
 using TMPro;
+using ViveSR.anipal.Eye;
 
 public class random_location : MonoBehaviour
 {
@@ -63,12 +62,13 @@ public class random_location : MonoBehaviour
     public bool showUI;
     bool prem;
 
-    // super scuffed LOL fix later
+    // Data tracking fields
     [SerializeField]
     List<Results> results;
     List<Vector3> positions;
     List<HeadTracking> headInfo;
     public bool showPath;
+    SRanipal_GazeRaySampleDataCol eyeDataCollector;
 
 
     // Start is called before the first frame update
@@ -84,13 +84,14 @@ public class random_location : MonoBehaviour
         //find the cube in the scene
         cube_Rigidbody = GetComponent<Rigidbody>();
         startPanel = GameObject.Find("StartPanel");
+        eyeDataCollector = GameObject.Find("EyeDataCollector").GetComponent<SRanipal_GazeRaySampleDataCol>();
         showUI = true;
         prem = false;
         results = new List<Results>();
         positions = new List<Vector3>();
         headInfo = new List<HeadTracking>();
 
-        var lineRenderer = this.gameObject.GetComponent<LineRenderer>();
+        var lineRenderer = gameObject.GetComponent<LineRenderer>();
         lineRenderer.enabled = false;
     }
 
@@ -124,10 +125,21 @@ public class random_location : MonoBehaviour
         StartNewTrial();
     }
 
+    internal int getType()
+    {
+        throw new NotImplementedException();
+    }
+
+    internal GameObject getContainer()
+    {
+        throw new NotImplementedException();
+    }
+
     void StartNewTrial() {
         showUI = false;
         positions = new List<Vector3>();
         headInfo = new List<HeadTracking>();
+        eyeDataCollector.startCollectingData();
         gameOver = false;
         numFramesBeforeNextTrial = 200;
         Score.scoreStart(10);
@@ -223,7 +235,7 @@ public class random_location : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!startPanel.active)
+        if (!startPanel.activeSelf)
         {
             RunExpt();
         }
@@ -287,8 +299,10 @@ public class random_location : MonoBehaviour
             Results result = new Results(subjectName, isPatient, difficulty, "28-11-2022", currTimeText.text, Int32.Parse(LivesRemainingText.text.Substring(14)), eye);
 
             results.Add(result);
+            eyeDataCollector.stopCollectingData();
             WriteToCSV.SavePositionData(positions, subjectName, curTrialNum);
             WriteToCSV.SaveHeadData(headInfo, subjectName, curTrialNum);
+            
             if (curTrialNum < numTrials)
             {
                 curTrialNum++;
@@ -365,6 +379,11 @@ public class random_location : MonoBehaviour
         {
             VRTimer.text = time.ToString(@"mm\:ss\:ff");
         }
+    }
+
+    public int getTrialNum()
+    {
+        return curTrialNum;
     }
     
 }
