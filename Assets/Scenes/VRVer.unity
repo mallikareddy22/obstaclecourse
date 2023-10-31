@@ -525,6 +525,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 526928780}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &120121675 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 146900, guid: 4d293c8e162f3874b982baadd71153d2,
+    type: 3}
+  m_PrefabInstance: {fileID: 973559445}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &124516922
 GameObject:
   m_ObjectHideFlags: 0
@@ -4389,6 +4395,12 @@ MonoBehaviour:
   _head: {fileID: 0}
   _ears: {fileID: 0}
   wireframe: 0
+--- !u!20 &973559452 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 20000014031267948, guid: 4d293c8e162f3874b982baadd71153d2,
+    type: 3}
+  m_PrefabInstance: {fileID: 973559445}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1028546507
 GameObject:
   m_ObjectHideFlags: 0
@@ -5659,6 +5671,8 @@ GameObject:
   - component: {fileID: 1292289621}
   - component: {fileID: 1292289620}
   - component: {fileID: 1292289624}
+  - component: {fileID: 1292289625}
+  - component: {fileID: 1292289626}
   m_Layer: 0
   m_Name: VRController
   m_TagString: Untagged
@@ -5861,6 +5875,52 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
+--- !u!114 &1292289625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1292289619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d817c2a7b54707f41b055972c1f2fdac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LengthOfRay: 25
+  Condition: 
+  CenterEye: {fileID: 973559447}
+  screenPosC: {x: 0, y: 0, z: 0}
+  screenPosL: {x: 0, y: 0, z: 0}
+  screenPosR: {x: 0, y: 0, z: 0}
+  worldPosC: {x: 0, y: 0, z: 0}
+  worldPosL: {x: 0, y: 0, z: 0}
+  worldPosR: {x: 0, y: 0, z: 0}
+  GazeDirectionCombined: {x: 0, y: 0, z: 0}
+  GazeOriginCombinedLocal: {x: 0, y: 0, z: 0}
+  L_Origin: {x: 0, y: 0, z: 0}
+  R_Origin: {x: 0, y: 0, z: 0}
+  L_Direction: {x: 0, y: 0, z: 0}
+  R_Direction: {x: 0, y: 0, z: 0}
+  cameraRig: {fileID: 120121675}
+  camera: {fileID: 973559452}
+  monocular: 
+  inverted: 
+--- !u!114 &1292289626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1292289619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47613961cde0a8b4aa4f79219b7e523c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EnableEye: 1
+  EnableEyeDataCallback: 1
+  EnableEyeVersion: 0
 --- !u!1 &1303503744
 GameObject:
   m_ObjectHideFlags: 0

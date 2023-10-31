@@ -84,7 +84,7 @@ public class random_location : MonoBehaviour
         //find the cube in the scene
         cube_Rigidbody = GetComponent<Rigidbody>();
         startPanel = GameObject.Find("StartPanel");
-        eyeDataCollector = GameObject.Find("EyeDataCollector").GetComponent<SRanipal_GazeRaySampleDataCol>();
+        eyeDataCollector = gameObject.GetComponent<SRanipal_GazeRaySampleDataCol>();
         showUI = true;
         prem = false;
         results = new List<Results>();
@@ -123,16 +123,6 @@ public class random_location : MonoBehaviour
         showUI = false;
         startPanel.SetActive(false);
         StartNewTrial();
-    }
-
-    internal int getType()
-    {
-        throw new NotImplementedException();
-    }
-
-    internal GameObject getContainer()
-    {
-        throw new NotImplementedException();
     }
 
     void StartNewTrial() {
@@ -385,5 +375,15 @@ public class random_location : MonoBehaviour
     {
         return curTrialNum;
     }
-    
+
+    public string getName()
+    {
+        return subjectName;
+    }
+
+    public int getDiff()
+    {
+        return difficulty;
+    }
+
 }

@@ -44,15 +44,12 @@ namespace ViveSR
                 private StreamWriter sw;
                 private StreamWriter sw2;
 
-                public GameObject desk;
-                public Text text;
                 public GameObject cameraRig;
                 public Camera camera;
-                public GameObject spawner;
                 random_location generationScript;
-                GameObject container;
+                string name;
+                int diff;
                 int trialNum;
-                int type;
                 bool collectingData;
 
                 public string monocular = ""; //L, R, or blank
@@ -69,10 +66,7 @@ namespace ViveSR
                     else if (Equals(monocular, "R")) {
                         camera.stereoTargetEye = StereoTargetEyeMask.Right;
                     }
-                    generationScript = spawner.GetComponent<random_location>();
-                    container = generationScript.getContainer();
-                    type = generationScript.getType();
-                    trialNum = generationScript.getTrialNum();
+                    generationScript = gameObject.GetComponent<random_location>();
 
                     if (Equals(inverted, "I")) {
                         StartCoroutine(WaitHeadPos());
@@ -97,7 +91,6 @@ namespace ViveSR
                     Debug.Log(headPosition.y);
                     cameraRig.transform.position = new Vector3(-1, headPosition.y + 3.17f, -1);
                     cameraRig.transform.localRotation = Quaternion.Euler(180, 35, 0);
-                    text.transform.localRotation = Quaternion.Euler(0, 90, 180);
                 }
 
                 private void Update()
@@ -113,24 +106,30 @@ namespace ViveSR
                 public void startCollectingData()
                 {
                     collectingData = true;
+                    name = generationScript.getName();
+                    diff = generationScript.getDiff();
+                    trialNum = generationScript.getTrialNum();
+                    generationScript.getTrialNum();
+                    string filePath = Application.persistentDataPath + "/" + name + "/trial" + "_" + trialNum + "_eye.csv";
+                    (new FileInfo(filePath)).Directory.Create();
+                    sw = File.AppendText(filePath);
+                    string header = "Trial" + ", " + "Time" + ", " + "Type" + ", " + "L Pixel X " + " , " + "L Pixel Y " + " , " + "L Pixel Z" +
+", " + "L hit point in Z" + " , " + "L Looking At" + ", " + "L World X" + ", " + "L World Y" + ", " + "R Pixel X " + ", " + "R Pixel Y " + " , " + "R Pixel Z" +
+", " + "R hit point in Z" + " , " + "R Looking At" + ", " + "R World X" + ", " + "R World Y" + ", " + "C Pixel X " + ", " + "C Pixel Y " + " , " + "C Pixel Z" +
+", " + "C hit point in Z" + " , " + "C Looking At" + ", " + "C World X" + ", " + "C World Y" + ", " + "L Origin X " + ", " + "L Origin Y " + " , " + "L Origin Z" +
+", " + "R Origin X " + " , " + "R Origin Y " + " , " + "R Origin Z" + "\n";
+                    sw.Write(header);
+
                 }
 
                 public void stopCollectingData()
                 {
                     collectingData = false;
+                    sw.Close();
                 }
 
                 private void GetGazeData()
                 {
-                    string filePath = Application.persistentDataPath + "/" + name + "/trial" + "_" + trialNum + "_eye.csv";
-                    (new FileInfo(filePath)).Directory.Create();
-                    sw = File.AppendText(filePath);
-                    string header = "Trial" + ", " + "Time" + ", " + "Type" + ", " + "L Pixel X " + " , " + "L Pixel Y " + " , " + "L Pixel Z" +
-                    ", " + "L hit point in Z" + " , " + "L Looking At" + ", " + "L World X" + ", " + "L World Y" + ", " + "R Pixel X " + ", " + "R Pixel Y " + " , " + "R Pixel Z" +
-                    ", " + "R hit point in Z" + " , " + "R Looking At" + ", " + "R World X" + ", " + "R World Y" + ", " + "C Pixel X " + ", " + "C Pixel Y " + " , " + "C Pixel Z" +
-                    ", " + "C hit point in Z" + " , " + "C Looking At" + ", " + "C World X" + ", " + "C World Y" + ", " + "L Origin X " + ", " + "L Origin Y " + " , " + "L Origin Z" +
-                    ", " + "R Origin X " + " , " + "R Origin Y " + " , " + "R Origin Z" + "\n";
-                    sw.Write(header);
 
                     if (SRanipal_Eye_Framework.Status != SRanipal_Eye_Framework.FrameworkStatus.WORKING &&
                         SRanipal_Eye_Framework.Status != SRanipal_Eye_Framework.FrameworkStatus.NOT_SUPPORT) return;
@@ -209,14 +208,13 @@ namespace ViveSR
                         screenPosC.z = hitInfoC.point.z;
                     }
 
-                    string textAll = trialNum + ", " + System.DateTime.Now.Ticks.ToString() + ", " + type + ", " + screenPosL.x + ", " + screenPosL.y + ", " + screenPosL.z +
+                    string textAll = trialNum + ", " + System.DateTime.Now.Ticks.ToString() + ", " + diff + ", " + screenPosL.x + ", " + screenPosL.y + ", " + screenPosL.z +
                     ", " + hitInfoL.distance + ", " + lObjectName + ", " + worldPosL.x + ", " + worldPosL.y + ", " + screenPosR.x + ", " + screenPosR.y + ", " + screenPosR.z +
                     ", " + hitInfoR.distance + ", " + rObjectName + ", " + worldPosR.x + ", " + worldPosR.y + ", " + screenPosC.x + ", " + screenPosC.y + ", " + screenPosC.z +
                     ", " + hitInfoC.distance + ", " + cObjectName + ", " + worldPosC.x + ", " + worldPosC.y + ", " + L_Origin.x + ", " + L_Origin.y + ", " + L_Origin.z +
                      ", " + R_Origin.x + ", " + R_Origin.y + ", " + R_Origin.z + "\n";
                     
                     sw.Write(textAll);
-
                     
                 }
 

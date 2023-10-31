@@ -5,7 +5,7 @@
       "app_key": "application.generated.unity.obstaclecourse.exe",
       "launch_type": "url",
       "url": "steam://launch/",
-      "action_manifest_path": "C:\\Users\\HMD-Disparity\\Documents\\obstaclecourse\\Assets\\StreamingAssets\\SteamVR\\actions.json",
+      "action_manifest_path": "C:\\Users\\HMD-Disparity\\Documents\\obstaclecourse\\obstaclecourse\\Assets\\StreamingAssets\\SteamVR\\actions.json",
       "strings": {
         "en_us": {
           "name": "Obstacle Course [Testing]"
