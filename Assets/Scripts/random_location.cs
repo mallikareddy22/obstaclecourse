@@ -205,23 +205,27 @@ public class random_location : MonoBehaviour
         }
     }
 
-    void OnTriggerStay(Collider other) {
+    void OnCollisionStay(Collision collision) {
         //move the object back
         if (!debugManager.isVR)
         {
             transform.Translate(-movement * Time.deltaTime * speed);
         }
 
-        numFramesBeforeScoreDecrease--;
-        if (numFramesBeforeScoreDecrease <= 0) {
-            Score.decreaseScore(GameOverText);
-
-            if (debugManager.isVR)
+        if (collision.collider.name == "Cylinder 1(Clone)")
+        {
+            numFramesBeforeScoreDecrease--;
+            if (numFramesBeforeScoreDecrease <= 0)
             {
-                Score.decreaseScoreVR(GameOver);
-            }
+                Score.decreaseScore(GameOverText);
 
-            numFramesBeforeScoreDecrease = debugManager.isVR ? XRDevice.refreshRate : Application.targetFrameRate;
+                if (debugManager.isVR)
+                {
+                    Score.decreaseScoreVR(GameOver);
+                }
+
+                numFramesBeforeScoreDecrease = debugManager.isVR ? XRDevice.refreshRate : Application.targetFrameRate;
+            }
         }
     }
 
@@ -232,7 +236,6 @@ public class random_location : MonoBehaviour
         {
             RunExpt();
         }
-        Debug.Log(numFramesBeforeScoreDecrease);
     }
 
     public void RunPrem()
