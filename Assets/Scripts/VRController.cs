@@ -18,7 +18,8 @@ public class VRController : MonoBehaviour
     private float m_Speed = 0.0f;
     private float m_Orient;
 
-    private CharacterController m_CharacterController = null;
+    private Rigidbody m_RigidBody = null;
+    private CapsuleCollider m_CapsuleCollider = null;
     private Transform m_CameraRig = null;
     private Transform m_Head = null;
 
@@ -28,7 +29,8 @@ public class VRController : MonoBehaviour
 
     private void Awake()
     {
-        m_CharacterController = GetComponent<CharacterController>();
+        m_RigidBody = GetComponent<Rigidbody>();
+        m_CapsuleCollider = GetComponent<CapsuleCollider>();
     }
 
     void Start()
@@ -73,6 +75,7 @@ public class VRController : MonoBehaviour
         m_CameraRig.rotation = oldRotation;
     }
 
+    // Movement using controllers.
     private void CalculateMvmt()
     {
         if (m_MoveValue == null)
@@ -103,28 +106,10 @@ public class VRController : MonoBehaviour
         }
 
         // apply mvmt
-        m_CharacterController.Move(movement);
+        m_RigidBody.MovePosition(transform.position + movement);
     }
 
-    // from cube control
-    void OnTriggerStay(Collider other)
-    {
-        // move the object back
-        // first determine if the object is moving forwards or backwards
-        // then negate its movement
-        Vector3 velocity = m_CharacterController.velocity;
-        Vector3 forwardDir = m_CharacterController.transform.forward;
-        float dot = Vector3.Dot(velocity, forwardDir);
-        if (dot < 0)
-        {
-            m_CharacterController.Move(movement * m_Speed);
-        }
-        else
-        {
-            m_CharacterController.Move(-movement * m_Speed);
-        }
-    }
-
+    // Rotation using controllers.
     private void CalculateRot()
     {
         float snapValue = 0.0f;
@@ -144,17 +129,16 @@ public class VRController : MonoBehaviour
         }
     }
 
-    // causes some weird centering issues, need to recalculate, not that necessary
+    // Change height of collider to match height of headset in real space.
     private void HandleHeight()
     {
         // get head in local space
         float headHeight = Mathf.Clamp(m_Head.localPosition.y, 1, 2);
-        m_CharacterController.height = headHeight;
+        m_CapsuleCollider.height = headHeight;
 
         // cut in half
         Vector3 newCenter = Vector3.zero;
-        newCenter.y = m_CharacterController.height / 2;
-        newCenter.y += m_CharacterController.skinWidth;
+        newCenter.y = m_CapsuleCollider.height / 2;
 
         // move capsule in local space
         newCenter.x = m_Head.localPosition.x;
@@ -164,9 +148,10 @@ public class VRController : MonoBehaviour
         newCenter = Quaternion.Euler(0, -transform.eulerAngles.y, 0) * newCenter;
 
         // apply
-        m_CharacterController.center = m_Head.localPosition;
+        m_CapsuleCollider.center = m_Head.localPosition;
     }
 
+    // Reset the position of the subject to the beginning of the course.
     public void resetPos()
     {
         float x = 22.0f;
