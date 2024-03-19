@@ -1135,6 +1135,7 @@ MonoBehaviour:
   VRLives: {fileID: 472129558}
   VRTimer: {fileID: 65485451}
   GameOver: {fileID: 896989589}
+  vrController: {fileID: 0}
   difficulty: 1
   startPanel: {fileID: 1043258327}
   showUI: 0
@@ -3511,6 +3512,7 @@ MonoBehaviour:
   VRLives: {fileID: 0}
   VRTimer: {fileID: 0}
   GameOver: {fileID: 0}
+  vrController: {fileID: 0}
   difficulty: 0
   startPanel: {fileID: 0}
   showUI: 0
@@ -5712,6 +5714,7 @@ MonoBehaviour:
   VRLives: {fileID: 472129558}
   VRTimer: {fileID: 65485451}
   GameOver: {fileID: 896989589}
+  vrController: {fileID: 0}
   difficulty: 1
   startPanel: {fileID: 1043258327}
   showUI: 0
@@ -5771,7 +5774,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1292289619}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 2.74, z: 0}
   m_LocalScale: {x: 0.99999994, y: 1, z: 0.99999994}
   m_Children:
   - {fileID: 973559446}
@@ -6027,6 +6030,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2350416756271407295, guid: 9ca58cbf5836b4f899da6db8a3d65aa8,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3788060439758666082, guid: 9ca58cbf5836b4f899da6db8a3d65aa8,
         type: 3}
       propertyPath: m_RootOrder

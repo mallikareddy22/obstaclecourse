@@ -54,6 +54,9 @@ public class random_location : MonoBehaviour
     public TextMeshPro VRTimer;
     public TextMeshPro GameOver;
 
+    // vr character instance
+    public VRController vrController;
+
     //difficulties
     public int difficulty;
 
@@ -75,7 +78,7 @@ public class random_location : MonoBehaviour
     void Start()
     {
         Application.targetFrameRate = 25;
-        numFramesBeforeScoreDecrease = debugManager.isVR ? XRDevice.refreshRate : Application.targetFrameRate;
+        numFramesBeforeScoreDecrease = 0;
 
         numTrials = 2;
 
@@ -163,16 +166,16 @@ public class random_location : MonoBehaviour
         switch (difficulty)
         {
             case 1:
-                minNumCylinders = 40;
-                maxNumCylinders = 50;
+                minNumCylinders = 30;
+                maxNumCylinders = 40;
                 break;
             case 2:
                 minNumCylinders = 60;
                 maxNumCylinders = 70;
                 break;
             case 3:
-                minNumCylinders = 80;
-                maxNumCylinders = 90;
+                minNumCylinders = 90;
+                maxNumCylinders = 100;
                 break;
         }
 
@@ -229,6 +232,7 @@ public class random_location : MonoBehaviour
         {
             RunExpt();
         }
+        Debug.Log(numFramesBeforeScoreDecrease);
     }
 
     public void RunPrem()
