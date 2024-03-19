@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR;
+using System.Collections;
 using System.Collections.Generic;
 using static Score;
 using System;
@@ -42,6 +43,8 @@ public class random_location : MonoBehaviour
     Vector3 movement;
     public bool gameOver;
     int numFramesBeforeNextTrial;
+    private bool loseLives;
+    private Coroutine loseEverySecond;
 
     public int counter = 1; // remove later, band aid fix
 
@@ -93,6 +96,7 @@ public class random_location : MonoBehaviour
         results = new List<Results>();
         positions = new List<Vector3>();
         headInfo = new List<HeadTracking>();
+        loseLives = false;
 
         var lineRenderer = gameObject.GetComponent<LineRenderer>();
         lineRenderer.enabled = false;
@@ -205,6 +209,26 @@ public class random_location : MonoBehaviour
         }
     }
 
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.name == "Cylinder 1(Clone)")
+        {
+            loseLives = true;
+            if (loseEverySecond == null)
+            {
+                loseEverySecond = StartCoroutine(LoseLivesPerSecond());
+            }
+        }
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        if (collision.collider.name == "Cylinder 1(Clone)")
+        {
+            loseLives = false;
+        }
+    }
+
     void OnCollisionStay(Collision collision) {
         //move the object back
         if (!debugManager.isVR)
@@ -214,19 +238,22 @@ public class random_location : MonoBehaviour
 
         if (collision.collider.name == "Cylinder 1(Clone)")
         {
-            numFramesBeforeScoreDecrease--;
-            if (numFramesBeforeScoreDecrease <= 0)
-            {
-                Score.decreaseScore(GameOverText);
-
-                if (debugManager.isVR)
-                {
-                    Score.decreaseScoreVR(GameOver);
-                }
-
-                numFramesBeforeScoreDecrease = debugManager.isVR ? XRDevice.refreshRate : Application.targetFrameRate;
-            }
+            loseLives = true;
         }
+    }
+
+    private IEnumerator LoseLivesPerSecond()
+    {
+        while (loseLives)
+        {
+            Score.decreaseScore(GameOverText);
+            if (debugManager.isVR)
+            {
+                Score.decreaseScoreVR(GameOver);
+            }
+            yield return new WaitForSeconds(1f);
+        }
+        loseEverySecond = null;
     }
 
     // Update is called once per frame
