@@ -114,10 +114,10 @@ namespace ViveSR
                     (new FileInfo(filePath)).Directory.Create();
                     sw = File.AppendText(filePath);
                     string header = "Trial" + ", " + "Time" + ", " + "Type" + ", " + "L Pixel X " + " , " + "L Pixel Y " + " , " + "L Pixel Z" +
-", " + "L hit point in Z" + " , " + "L Looking At" + ", " + "L World X" + ", " + "L World Y" + ", " + "R Pixel X " + ", " + "R Pixel Y " + " , " + "R Pixel Z" +
-", " + "R hit point in Z" + " , " + "R Looking At" + ", " + "R World X" + ", " + "R World Y" + ", " + "C Pixel X " + ", " + "C Pixel Y " + " , " + "C Pixel Z" +
-", " + "C hit point in Z" + " , " + "C Looking At" + ", " + "C World X" + ", " + "C World Y" + ", " + "L Origin X " + ", " + "L Origin Y " + " , " + "L Origin Z" +
-", " + "R Origin X " + " , " + "R Origin Y " + " , " + "R Origin Z" + "\n";
+                        ", " + "L hit point in Z" + " , " + "L Looking At" + ", " + "L World X" + ", " + "L World Y" + ", " + "R Pixel X " + ", " + "R Pixel Y " + " , " + "R Pixel Z" +
+                        ", " + "R hit point in Z" + " , " + "R Looking At" + ", " + "R World X" + ", " + "R World Y" + ", " + "C Pixel X " + ", " + "C Pixel Y " + " , " + "C Pixel Z" +
+                        ", " + "C hit point in Z" + " , " + "C Looking At" + ", " + "C World X" + ", " + "C World Y" + ", " + "L Origin X " + ", " + "L Origin Y " + " , " + "L Origin Z" +
+                        ", " + "R Origin X " + " , " + "R Origin Y " + " , " + "R Origin Z" + "\n";
                     sw.Write(header);
 
                 }

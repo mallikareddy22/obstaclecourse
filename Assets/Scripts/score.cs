@@ -18,7 +18,7 @@ public static class Score
         initScore = score;
     }
     // Update is called once per frame
-    public static void decreaseScore(Text GameOverText)
+    public static void decreaseScore(TextMeshProUGUI GameOverText)
     {
         if (initScore > 0)
         {
@@ -44,7 +44,7 @@ public static class Score
         return initScore == 0;
     }
 
-    public static void displayScore(Text LivesRemainingText)
+    public static void displayScore(TextMeshProUGUI LivesRemainingText)
     {
         LivesRemainingText.text = "Lives Remain: " + getScore();
     }
@@ -54,7 +54,7 @@ public static class Score
         VRText.text = "Lives Remain: " + getScore();
     }
 
-    public static void displayGameOver(Text GameOverText, string message) 
+    public static void displayGameOver(TextMeshProUGUI GameOverText, string message) 
     {
         GameOverText.text = message;
     }

@@ -42,6 +42,9 @@ public class DebugManager : MonoBehaviour
             SimVRPlayer.SetActive(true);
             SimTool.SetActive(true);
             VRPlayer.SetActive(false);
+            CubePlayer.SetActive(false);
+            CubeCamera.SetActive(false);
+            CimCam.SetActive(false);
         }
         else
         {
@@ -51,6 +54,23 @@ public class DebugManager : MonoBehaviour
                 SimVRPlayer.SetActive(false);
                 SimTool.SetActive(false);
             }
+        }
+    }
+
+    public void StartExpt()
+    {
+        if (isSim)
+        {
+            SimVRPlayer.GetComponent<random_location>().SetupInfo();
+        }
+        else if (isVR)
+        {
+            VRPlayer.GetComponent<random_location>().SetupInfo();
+        }
+        else
+        {
+            Debug.Log("Non-VR version is unsupported! Please use the Simulator or VR version.");
+            CubePlayer.GetComponent<random_location>().SetupInfo();
         }
     }
 }

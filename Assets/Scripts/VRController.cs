@@ -23,9 +23,7 @@ public class VRController : MonoBehaviour
     private Transform m_CameraRig = null;
     private Transform m_Head = null;
 
-    public random_location RandManager;
-
-    Vector3 movement;
+    public random_location m_RandManager;
 
     private void Awake()
     {
@@ -45,17 +43,17 @@ public class VRController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!RandManager.gameOver)
+        if (!m_RandManager.gameOver)
         {
             HandleHeight();
             CalculateMvmt();
             CalculateRot();
         }
 
-        if (RandManager.gameOver && RandManager.curTrialNum < RandManager.numTrials && RandManager.counter == 0)
+        if (m_RandManager.gameOver && m_RandManager.curTrialNum < m_RandManager.numTrials && m_RandManager.counter == 0)
         {
             resetPos();
-            RandManager.counter++;
+            m_RandManager.counter++;
         }
     }
 
@@ -86,7 +84,7 @@ public class VRController : MonoBehaviour
         // find mvmt orientation
         Vector3 orientationEuler = new Vector3(0, m_Head.eulerAngles.y, 0);
         Quaternion orientation = Quaternion.Euler(orientationEuler);
-        movement = Vector3.zero;
+        Vector3 movement = Vector3.zero;
 
         // not moving
         if (m_MovePress.GetStateUp(SteamVR_Input_Sources.RightHand))

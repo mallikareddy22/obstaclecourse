@@ -11,8 +11,6 @@ using ViveSR.anipal.Eye;
 public class random_location : MonoBehaviour
 {
     Rigidbody cube_Rigidbody;
-    public Text LivesRemainingText;
-    public Text GameOverText;
     public float speed = 3.5f;
     public string subjectName;
     public bool isPatient;
@@ -32,15 +30,12 @@ public class random_location : MonoBehaviour
     public float startRot;
 
     Vector3 pos;
-    float timePrev;
-    float numFramesBeforeScoreDecrease;
     int minNumCylinders;
     int maxNumCylinders;
     public GameObject cylinder;
     GameObject[] cylinders;
     public int numTrials;
     public int curTrialNum;
-    Vector3 movement;
     public bool gameOver;
     int numFramesBeforeNextTrial;
     private bool loseLives;
@@ -50,15 +45,14 @@ public class random_location : MonoBehaviour
 
     // time fields
     private float currTime;
-    public Text currTimeText;
+    public TextMeshProUGUI currTimeText;
+    public TextMeshProUGUI LivesRemainingText;
+    public TextMeshProUGUI GameOverText;
 
     // vr ui fields
     public TextMeshPro VRLives;
     public TextMeshPro VRTimer;
     public TextMeshPro GameOver;
-
-    // vr character instance
-    public VRController vrController;
 
     //difficulties
     public int difficulty;
@@ -74,16 +68,20 @@ public class random_location : MonoBehaviour
     List<Vector3> positions;
     List<HeadTracking> headInfo;
     public bool showPath;
+
     SRanipal_GazeRaySampleDataCol eyeDataCollector;
+    Vector3 oldCenter;
 
 
     // Start is called before the first frame update
     void Start()
     {
         Application.targetFrameRate = 25;
-        numFramesBeforeScoreDecrease = 0;
-
         numTrials = 2;
+        if (debugManager.isSim)
+        {
+            oldCenter = GetComponent<CharacterController>().center;
+        }
 
         //number of obstacles
 
@@ -162,9 +160,6 @@ public class random_location : MonoBehaviour
             transform.position = pos;
         }
 
-        //Time between previous frame and current frame
-        timePrev = 0;
-
         // set difficulty levels
 
         switch (difficulty)
@@ -230,12 +225,6 @@ public class random_location : MonoBehaviour
     }
 
     void OnCollisionStay(Collision collision) {
-        //move the object back
-        if (!debugManager.isVR)
-        {
-            transform.Translate(-movement * Time.deltaTime * speed);
-        }
-
         if (collision.collider.name == "Cylinder 1(Clone)")
         {
             loseLives = true;
@@ -286,10 +275,6 @@ public class random_location : MonoBehaviour
             headInfo.Add(new HeadTracking(headPosition, headRotation));
 
         }
-
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
-        timePrev = Time.deltaTime;
         
         positions.Add(this.transform.position);
         if (!gameOver)
@@ -312,11 +297,21 @@ public class random_location : MonoBehaviour
                 return;
             }
 
-            if (!debugManager.isVR)
+            if (!debugManager.isVR && !debugManager.isSim)
             {
-                MoveObject(x, z, timePrev);
+                // Scene orientation is inverted, so z and x are switched.
+                float x = Input.GetAxis("Horizontal");
+                float z = Input.GetAxis("Vertical");
+                Vector3 movement = new Vector3(z, 0, -x);
+                cube_Rigidbody.MovePosition(transform.position + movement * speed * Time.deltaTime);
             }
 
+            if (debugManager.isSim)
+            {
+                Debug.Log("hi");
+                GetComponent<CapsuleCollider>().center = GetComponent<CharacterController>().center - oldCenter;
+                oldCenter = GetComponent<CharacterController>().center;
+            }
         }
         else
         {
@@ -367,13 +362,6 @@ public class random_location : MonoBehaviour
             }
         }
         
-    }
-
-    void MoveObject(float x, float z, float time = 1) 
-    {
-        movement = new Vector3(x, 0, z);
-        movement = Vector3.ClampMagnitude(movement, 1);
-        transform.Translate(movement * speed * time);
     }
 
     void RandomCylinderGenerator(int idx) 
