@@ -132,6 +132,7 @@ public class random_location : MonoBehaviour
 
     void StartNewTrial() {
         showUI = false;
+        loseLives = false;
         positions = new List<Vector3>();
         headInfo = new List<HeadTracking>();
         eyeDataCollector.startCollectingData();
@@ -321,7 +322,6 @@ public class random_location : MonoBehaviour
             eyeDataCollector.stopCollectingData();
             WriteToCSV.SavePositionData(positions, subjectName, curTrialNum);
             WriteToCSV.SaveHeadData(headInfo, subjectName, curTrialNum);
-            
             if (curTrialNum < numTrials)
             {
                 curTrialNum++;
