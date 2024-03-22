@@ -165,19 +165,19 @@ public class random_location : MonoBehaviour
         switch (difficulty)
         {
             case 1:
-                minNumCylinders = 30;
-                maxNumCylinders = 40;
+                minNumCylinders = 40;
+                maxNumCylinders = 45;
                 break;
             case 2:
-                minNumCylinders = 60;
+                minNumCylinders = 65;
                 maxNumCylinders = 70;
                 break;
             case 3:
-                minNumCylinders = 90;
-                maxNumCylinders = 100;
+                minNumCylinders = 85;
+                maxNumCylinders = 90;
                 break;
         }
-
+        cylinder.SetActive(true);
         //Destroy cylinders 
         if (curTrialNum != 1) {
             foreach (GameObject curCylinder in cylinders) {
@@ -192,7 +192,7 @@ public class random_location : MonoBehaviour
         for (int i = 0; i < cylinders.Length; i++) {
             RandomCylinderGenerator(i);
         }
-
+        cylinder.SetActive(false);
         counter = 0;
     }
 
@@ -364,14 +364,32 @@ public class random_location : MonoBehaviour
         
     }
 
-    void RandomCylinderGenerator(int idx) 
+    void RandomCylinderGenerator(int idx)
     {
-        float x = UnityEngine.Random.Range(-23.0F, 23.0F);
-        float y = 1.0f;
-        float z = UnityEngine.Random.Range(-23.0f, 23.0f);
-        if (!(x <= -18.0 && z >= -2.0 && z <= 5.0) && !(x > 22.0F && z >= -6.0F && z <= 6.0)) {
-            cylinders[idx] = Instantiate(cylinder, new Vector3(x, y, z), Quaternion.identity);
-        }
+        float x;
+        float y;
+        float z;
+        bool overlap;
+        do
+        {
+            x = UnityEngine.Random.Range(-23.0F, 23.0F);
+            y = 0.5f;
+            z = UnityEngine.Random.Range(-23.0f, 23.0f);
+            overlap = false;
+            for (int i = 0; i < idx; i++)
+            {
+                if (cylinders[i] != null)
+                {
+                    float distance = Vector3.Distance(new Vector3(x, y, z), cylinders[i].transform.position);
+                    if (distance <= 4.2)
+                    {
+                        overlap = true;
+                        break;
+                    }
+                }
+            }
+        } while ((x <= -18.0 && z >= -2.0 && z <= 5.0) || (x > 18.0F && z >= -6.0F && z <= 6.0) || overlap);
+        cylinders[idx] = Instantiate(cylinder, new Vector3(x, y, z), Quaternion.identity);
     }
 
     bool checkGameEnd(float x, float z) {

@@ -6650,6 +6650,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cylinder 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6671108722322147492, guid: 9ca58cbf5836b4f899da6db8a3d65aa8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9ca58cbf5836b4f899da6db8a3d65aa8, type: 3}
 --- !u!1 &1310194351 stripped
